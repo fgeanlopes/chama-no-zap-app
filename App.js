@@ -7,16 +7,27 @@ import {
   TouchableOpacity,
   Image,
   Animated,
+  Keyboard,
+  KeyboardAvoidingView,
 } from "react-native";
 
 export default function App() {
+
   const [numero, setNumero] = useState("");
 
   const [animeInput] = useState(new Animated.ValueXY({ x: 0, y: 100 }));
   const [opacity] = useState(new Animated.Value(0));
+  const [logo] = useState(new Animated.ValueXY({ x: 90, y: 90 }))
+  const [logoMarginTop] = useState(new Animated.Value(0))
+  const [opacitySaudacao] = useState(new Animated.Value(0.6))
 
   useEffect(() => {
+
+    KeyboardDidShowListener = Keyboard.addListener("keyboardDidShow", KeyboardDidShowListener);
+    KeyboardDidHideListener = Keyboard.addListener("keyboardDidHide", KeyboardDidHideListener);
+
     Animated.parallel([
+      // ANIMACAO DO INPUT
       Animated.spring(animeInput.y, {
         toValue: 0,
         speed: 1,
@@ -29,87 +40,161 @@ export default function App() {
     ]).start()
   }, [])
 
+  // TECLADO ABERTO
+  function KeyboardDidShowListener() {
+    Animated.parallel([
+      Animated.timing(logo.y, {
+        toValue: 90,
+        duration: 100,
+      }),
+      Animated.timing(logo.y, {
+        toValue: 90,
+        duration: 100,
+      }),
+      Animated.spring(logoMarginTop, {
+        toValue: 50,
+        speed: 1,
+      }),
+      Animated.timing(opacitySaudacao, {
+        toValue: 0,
+        duration: 100,
+      })
+    ]).start()
+  }
+
+  // TECLADO FECHADO
+  function KeyboardDidHideListener() {
+    Animated.parallel([
+      Animated.timing(logo.x, {
+        toValue: 90,
+        duration: 100,
+      }),
+      Animated.timing(logo.y, {
+        toValue: 90,
+        duration: 100,
+      }),
+      Animated.spring(logoMarginTop, {
+        toValue: 0,
+        speed: 1,
+      }),
+      Animated.timing(opacitySaudacao, {
+        toValue: 0.6,
+        speed: 100,
+      })
+    ]).start();
+  }
+
+
   function convertNumero() { }
   return (
-    // CONTAINER
-    <View style={styles.container}>
 
-      {/* LOGO */}
-      <Image
-        style={styles.img_logo}
-        source={require("./assets/icon.png")}
-      ></Image>
-      {/* FINAL LOGO */}
+    <KeyboardAvoidingView style={styles.tela}>
+      <View style={styles.container}>
 
-      {/* TITULO  */}
-      <Text style={styles.titulo}>Chama no Zap</Text>
-      {/* FINAL TITULO */}
+        {/* LOGO */}
+        <Animated.Image
+          style={{
+            marginTop: logoMarginTop,
+            width: logo.y,
+            height: logo.x,
+            borderRadius: 15,
+          }}
+          source={require("./assets/icon.png")}
+        ></Animated.Image>
+        {/* FINAL LOGO */}
 
-      {/* DESCRICAO */}
-      <Text style={styles.descricao}>Qual número deseja chamar?</Text>
-      {/* FINAL DESCRICAO */}
 
-      {/* VIEW DE ANIMACAO */}
-      <Animated.View
-        style={[
-          styles.container,
-          {
-            opacity: opacity,
-            transform: [{
-              translateY: animeInput.y
+        {/* TITULO  */}
+        <Text style={styles.titulo}>Chama no Zap</Text>
+        {/* FINAL TITULO */}
+
+        {/* SAUDACAO */}
+        <Animated.Text style={{
+          fontSize: 20,
+          paddingTop: 10,
+          opacity: opacitySaudacao,
+          maxWidth: "80%",
+          textAlign: "center",
+        }}>Seja bem vindo!</Animated.Text>
+        {/* FINAL SAUDACAO */}
+
+      </View >
+
+      <View style={styles.container}>
+        {/* VIEW DE ANIMACAO */}
+        <Animated.View
+          style={[
+            styles.container,
+            {
+              opacity: opacity,
+              transform: [{
+                translateY: animeInput.y
+              }
+              ]
             }
-            ]
-          }
-        ]}
-      >
+          ]}
+        >
 
-        {/* INPUT */}
-        <TextInput
-          style={styles.input_entrada}
-          value={numero}
-          onChangeText={(numero) => setNumero(numero)}
-          placeholder={"Adicione o número aqui."}
-          keyboardType="numeric"
-        />
-        {/* FINAL INPUT */}
+          {/* DESCRICAO */}
+          <Text style={styles.descricao}>Qual número deseja chamar?</Text>
+          {/* FINAL DESCRICAO */}
 
-        {/* BTN */}
-        <TouchableOpacity style={styles.btn_default} onPress={convertNumero}>
-          <Text style={styles.text_btn_default}>Chamar no Zap</Text>
-        </TouchableOpacity>
-        {/* FINAL BTN */}
+          {/* INPUT */}
+          <TextInput
+            style={styles.input_entrada}
+            value={numero}
+            onChangeText={(numero) => setNumero(numero)}
+            placeholder={"DD + Número"}
+            keyboardType="numeric"
+            placeholderTextColor="black"
+          />
+          {/* FINAL INPUT */}
 
-        {/* FINAL VIEW ANIMADA */}
-      </Animated.View>
+          {/* BTN */}
+          <TouchableOpacity style={styles.btn_default} onPress={convertNumero}>
+            <Text style={styles.text_btn_default}>Chamar no Zap</Text>
+          </TouchableOpacity>
+          {/* FINAL BTN */}
 
-    </View >
+          {/* FINAL VIEW ANIMADA */}
+        </Animated.View>
+      </View>
+    </KeyboardAvoidingView>
+
   );
 }
 
 const styles = StyleSheet.create({
+  tela: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   container: {
     flex: 1,
     backgroundColor: "white",
     alignItems: "center",
-    justifyContent: "space-around",
+    justifyContent: "center",
 
     width: "90%",
     marginLeft: "auto",
     marginRight: "auto",
   },
-  img_logo: {
-
-  },
 
   titulo: {
+    fontFamily: "MuseoModerno-SemiBold",
     fontSize: 30,
     opacity: 0.7,
+    paddingTop: 10,
   },
 
+
+
   descricao: {
-    fontSize: 16,
+    fontSize: 20,
+    marginBottom: 15,
     opacity: 0.6,
-    maxWidth: "80%",
+    maxWidth: "100%",
     textAlign: "center",
   },
 
@@ -119,6 +204,9 @@ const styles = StyleSheet.create({
     fontSize: 20,
     backgroundColor: "#f2f2f2",
     color: "black",
+    marginBottom: 30,
+    padding: 15,
+    width: "100%",
   },
 
   btn_default: {
