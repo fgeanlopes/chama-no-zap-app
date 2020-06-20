@@ -9,20 +9,23 @@ import {
   Animated,
   Keyboard,
   KeyboardAvoidingView,
+  Linking,
 } from "react-native";
 
 export default function App() {
-
-  const [numero, setNumero] = useState("");
+  // class Converter extends Component {
+  const [whatsApp, setWhatsApp] = useState('');
+  const url = "https://api.whatsapp.com/send?phone=55";
 
   const [animeInput] = useState(new Animated.ValueXY({ x: 0, y: 100 }));
   const [opacity] = useState(new Animated.Value(0));
   const [logo] = useState(new Animated.ValueXY({ x: 90, y: 90 }))
   const [logoMarginTop] = useState(new Animated.Value(0))
   const [opacitySaudacao] = useState(new Animated.Value(0.6))
+  // const [numero, setNumero] = useState("");
+
 
   useEffect(() => {
-
     KeyboardDidShowListener = Keyboard.addListener("keyboardDidShow", KeyboardDidShowListener);
     KeyboardDidHideListener = Keyboard.addListener("keyboardDidHide", KeyboardDidHideListener);
 
@@ -39,7 +42,6 @@ export default function App() {
       })
     ]).start()
   }, [])
-
   // TECLADO ABERTO
   function KeyboardDidShowListener() {
     Animated.parallel([
@@ -61,7 +63,6 @@ export default function App() {
       })
     ]).start()
   }
-
   // TECLADO FECHADO
   function KeyboardDidHideListener() {
     Animated.parallel([
@@ -84,8 +85,10 @@ export default function App() {
     ]).start();
   }
 
+  function convertNumero() {
+    const link_wts = "https://api.whatsapp.com/send?phone=55";
+  }
 
-  function convertNumero() { }
   return (
 
     <KeyboardAvoidingView style={styles.tela}>
@@ -113,24 +116,21 @@ export default function App() {
           fontSize: 20,
           paddingTop: 10,
           opacity: opacitySaudacao,
+          color: "white",
           maxWidth: "80%",
           textAlign: "center",
         }}>Seja bem vindo!</Animated.Text>
         {/* FINAL SAUDACAO */}
-
       </View >
-
       <View style={styles.container}>
         {/* VIEW DE ANIMACAO */}
         <Animated.View
           style={[
             styles.container,
             {
+              backgroundColor: "transparent",
               opacity: opacity,
-              transform: [{
-                translateY: animeInput.y
-              }
-              ]
+              transform: [{ translateY: animeInput.y }]
             }
           ]}
         >
@@ -142,8 +142,7 @@ export default function App() {
           {/* INPUT */}
           <TextInput
             style={styles.input_entrada}
-            value={numero}
-            onChangeText={(numero) => setNumero(numero)}
+            onChangeText={whatsApp => setWhatsApp(whatsApp)}
             placeholder={"DD + Número"}
             keyboardType="numeric"
             placeholderTextColor="black"
@@ -151,7 +150,9 @@ export default function App() {
           {/* FINAL INPUT */}
 
           {/* BTN */}
-          <TouchableOpacity style={styles.btn_default} onPress={convertNumero}>
+          <TouchableOpacity style={styles.btn_default} onPress={() => {
+            Linking.openURL(url + `${whatsApp}`)
+          }}>
             <Text style={styles.text_btn_default}>Chamar no Zap</Text>
           </TouchableOpacity>
           {/* FINAL BTN */}
@@ -169,10 +170,11 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    backgroundColor: "#525252d6",
   },
   container: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: "transparent",
     alignItems: "center",
     justifyContent: "center",
 
@@ -182,18 +184,19 @@ const styles = StyleSheet.create({
   },
 
   titulo: {
-    fontFamily: "MuseoModerno-SemiBold",
+    fontFamily: "sans-serif",
+    color: "white",
     fontSize: 30,
     opacity: 0.7,
     paddingTop: 10,
   },
 
-
-
   descricao: {
     fontSize: 20,
+    color: "white",
+    fontFamily: "sans-serif",
     marginBottom: 15,
-    opacity: 0.6,
+    opacity: 1,
     maxWidth: "100%",
     textAlign: "center",
   },
@@ -201,11 +204,12 @@ const styles = StyleSheet.create({
   input_entrada: {
     height: 50,
     borderRadius: 15,
+    fontFamily: "sans-serif",
     fontSize: 20,
     backgroundColor: "#f2f2f2",
-    color: "black",
     marginBottom: 30,
     padding: 15,
+    textAlign: "center",
     width: "100%",
   },
 
@@ -224,5 +228,7 @@ const styles = StyleSheet.create({
   text_btn_default: {
     color: "white",
     fontSize: 25,
+    fontFamily: "sans-serif",
+    fontWeight: "700",
   },
 });
