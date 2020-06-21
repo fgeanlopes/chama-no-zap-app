@@ -143,16 +143,28 @@ export default function App() {
           <TextInput
             style={styles.input_entrada}
             onChangeText={whatsApp => setWhatsApp(whatsApp)}
-            placeholder={"DD + Número"}
+            placeholder={'DD + Número'}
             keyboardType="numeric"
             placeholderTextColor="black"
+            value={whatsApp}
           />
           {/* FINAL INPUT */}
 
           {/* BTN */}
           <TouchableOpacity style={styles.btn_default} onPress={() => {
-            Linking.openURL(url + `${whatsApp}`)
+            //Validação
+            if (whatsApp === 0) {
+              alert("informe o número de deseja chamar")
+            }
+            else if (whatsApp.length > 2) {
+              Linking.openURL(url + whatsApp)
+              { setWhatsApp("") }
+            }
+            else {
+              alert("infome número completo")
+            }
           }}>
+
             <Text style={styles.text_btn_default}>Chamar no Zap</Text>
           </TouchableOpacity>
           {/* FINAL BTN */}
@@ -227,8 +239,8 @@ const styles = StyleSheet.create({
   },
   text_btn_default: {
     color: "white",
-    fontSize: 25,
+    fontSize: 30,
     fontFamily: "sans-serif",
-    fontWeight: "700",
+    fontWeight: "500",
   },
 });

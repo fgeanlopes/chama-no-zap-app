@@ -1,28 +1,28 @@
 {
   "expo": {
-    "name": "tarefas",
-    "slug": "tarefas",
+    "name": "Chama no Zap",
+    "description": "Com o 'Chama no zap', você chama os números no Whatsapp, sem precisar salvar.  Chama no Zap é forma certa de chamar.A forma fácil de chamar no Zap",
+    "slug": "chama-no-zap",
     "platforms": [
-      "ios",
-      "android",
-      "web"
+      "android"
     ],
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "resizeMode": "cover",
+      "backgroundColor": "#286C42"
     },
+    "primaryColor": "#286C42",
     "updates": {
       "fallbackToCacheTimeout": 0
     },
     "assetBundlePatterns": [
       "**/*"
     ],
-    "ios": {
-      "supportsTablet": true
+    "android": {
+      "package": "com.unidesenvlvimento.chamanozap"
     }
   }
 }
