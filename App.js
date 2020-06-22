@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
+  ImageBackground,
   Text,
   View,
   TextInput,
@@ -12,18 +13,25 @@ import {
   Linking,
 } from "react-native";
 
+import {
+  Tela,
+  Container,
+  Titulo,
+  Descricao,
+  CampoEntrada,
+  BtnEnviar,
+  TituloBtn,
+} from './styles';
+
 export default function App() {
-  // class Converter extends Component {
   const [whatsApp, setWhatsApp] = useState('');
   const url = "https://api.whatsapp.com/send?phone=55";
 
   const [animeInput] = useState(new Animated.ValueXY({ x: 0, y: 100 }));
-  const [opacity] = useState(new Animated.Value(0));
-  const [logo] = useState(new Animated.ValueXY({ x: 90, y: 90 }))
-  const [logoMarginTop] = useState(new Animated.Value(0))
-  const [opacitySaudacao] = useState(new Animated.Value(0.6))
-  // const [numero, setNumero] = useState("");
+  const [opacity] = useState(new Animated.Value(1));
+  const [opacitySaudacao] = useState(new Animated.Value(1))
 
+  const image = { uri: "https://reactjs.org/logo-og.png" };
 
   useEffect(() => {
     KeyboardDidShowListener = Keyboard.addListener("keyboardDidShow", KeyboardDidShowListener);
@@ -42,42 +50,16 @@ export default function App() {
       })
     ]).start()
   }, [])
-  // TECLADO ABERTO
   function KeyboardDidShowListener() {
     Animated.parallel([
-      Animated.timing(logo.y, {
-        toValue: 90,
-        duration: 100,
-      }),
-      Animated.timing(logo.y, {
-        toValue: 90,
-        duration: 100,
-      }),
-      Animated.spring(logoMarginTop, {
-        toValue: 50,
-        speed: 1,
-      }),
       Animated.timing(opacitySaudacao, {
         toValue: 0,
         duration: 100,
       })
     ]).start()
   }
-  // TECLADO FECHADO
   function KeyboardDidHideListener() {
     Animated.parallel([
-      Animated.timing(logo.x, {
-        toValue: 90,
-        duration: 100,
-      }),
-      Animated.timing(logo.y, {
-        toValue: 90,
-        duration: 100,
-      }),
-      Animated.spring(logoMarginTop, {
-        toValue: 0,
-        speed: 1,
-      }),
       Animated.timing(opacitySaudacao, {
         toValue: 0.6,
         speed: 100,
@@ -85,162 +67,122 @@ export default function App() {
     ]).start();
   }
 
-  function convertNumero() {
-    const link_wts = "https://api.whatsapp.com/send?phone=55";
-  }
-
   return (
 
-    <KeyboardAvoidingView style={styles.tela}>
-      <View style={styles.container}>
+    <Tela>
+      <ImageBackground style={styles.image} source={require("./assets/fundoApp.png")}>
+        <Container>
+          <Titulo>
+            Chama no
+          </Titulo>
+          <View style={styles.traco_decorado}></View>
+          <Titulo style={styles.tituloGrande}>
+            Zap
+           </Titulo>
+          <View style={styles.traco_decorado_grande}></View>
+        </Container>
+        <Container>
+          <Animated.View
+            style={[
+              styles.container, {
+                width: "100%",
+                opacity: opacity,
+                transform: [{ translateY: animeInput.y }]
+              }
+            ]}
+          >
+          </Animated.View>
+          {/* <Descricao ></Descricao> */}
 
-        {/* LOGO */}
-        <Animated.Image
-          style={{
-            marginTop: logoMarginTop,
-            width: logo.y,
-            height: logo.x,
-            borderRadius: 15,
-          }}
-          source={require("./assets/icon.png")}
-        ></Animated.Image>
-        {/* FINAL LOGO */}
+          <Animated.Text style={{
+            fontSize: 18,
+            color: "#fff",
+            fontFamily: "sans-serif",
+            position: "relative",
+            bottom: 30,
+            width: "100%",
+            textAlign: "left",
+            paddingBottom: 5,
+            borderColor: "#fff",
+            borderStyle: "solid",
+            borderWidth: 1,
+            borderTopWidth: 0,
+            borderRightWidth: 0,
+            borderLeftWidth: 0,
 
+            opacity: opacitySaudacao,
 
-        {/* TITULO  */}
-        <Text style={styles.titulo}>Chama no Zap</Text>
-        {/* FINAL TITULO */}
+          }}>Qual número deseja chamar?</Animated.Text>
 
-        {/* SAUDACAO */}
-        <Animated.Text style={{
-          fontSize: 20,
-          paddingTop: 10,
-          opacity: opacitySaudacao,
-          color: "white",
-          maxWidth: "80%",
-          textAlign: "center",
-        }}>Seja bem vindo!</Animated.Text>
-        {/* FINAL SAUDACAO */}
-      </View >
-      <View style={styles.container}>
-        {/* VIEW DE ANIMACAO */}
-        <Animated.View
-          style={[
-            styles.container,
-            {
-              backgroundColor: "transparent",
-              opacity: opacity,
-              transform: [{ translateY: animeInput.y }]
-            }
-          ]}
-        >
+          <Animated.View
+            style={[
+              styles.container, {
+                width: "100%",
+                opacity: opacity,
+                transform: [{ translateY: animeInput.y }]
+              }
+            ]}
+          >
+            <CampoEntrada
+              onChangeText={whatsApp => setWhatsApp(whatsApp)}
+              placeholder={'DD + Número'}
+              keyboardType="numeric"
+              placeholderTextColor="#fff"
+              value={whatsApp}
+            />
 
-          {/* DESCRICAO */}
-          <Text style={styles.descricao}>Qual número deseja chamar?</Text>
-          {/* FINAL DESCRICAO */}
+            <BtnEnviar onPress={() => {
+              if (whatsApp === 0) {
+                alert("informe o número de deseja chamar")
+              }
+              else if (whatsApp.length > 10) {
+                Linking.openURL(url + whatsApp)
+                { setWhatsApp("") }
+              }
+              else {
+                alert("infome número completo")
+              }
+            }}>
+              <TituloBtn>Chamar no Zap</TituloBtn>
+            </BtnEnviar>
+          </Animated.View>
+        </Container>
 
-          {/* INPUT */}
-          <TextInput
-            style={styles.input_entrada}
-            onChangeText={whatsApp => setWhatsApp(whatsApp)}
-            placeholder={'DD + Número'}
-            keyboardType="numeric"
-            placeholderTextColor="black"
-            value={whatsApp}
-          />
-          {/* FINAL INPUT */}
-
-          {/* BTN */}
-          <TouchableOpacity style={styles.btn_default} onPress={() => {
-            //Validação
-            if (whatsApp === 0) {
-              alert("informe o número de deseja chamar")
-            }
-            else if (whatsApp.length > 2) {
-              Linking.openURL(url + whatsApp)
-              { setWhatsApp("") }
-            }
-            else {
-              alert("infome número completo")
-            }
-          }}>
-
-            <Text style={styles.text_btn_default}>Chamar no Zap</Text>
-          </TouchableOpacity>
-          {/* FINAL BTN */}
-
-          {/* FINAL VIEW ANIMADA */}
-        </Animated.View>
-      </View>
-    </KeyboardAvoidingView>
-
+      </ImageBackground>
+    </Tela >
   );
 }
 
 const styles = StyleSheet.create({
-  tela: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#525252d6",
-  },
-  container: {
-    flex: 1,
-    backgroundColor: "transparent",
-    alignItems: "center",
-    justifyContent: "center",
-
-    width: "90%",
-    marginLeft: "auto",
-    marginRight: "auto",
-  },
-
-  titulo: {
-    fontFamily: "sans-serif",
-    color: "white",
-    fontSize: 30,
-    opacity: 0.7,
-    paddingTop: 10,
-  },
-
-  descricao: {
-    fontSize: 20,
-    color: "white",
-    fontFamily: "sans-serif",
-    marginBottom: 15,
-    opacity: 1,
-    maxWidth: "100%",
-    textAlign: "center",
-  },
-
-  input_entrada: {
-    height: 50,
-    borderRadius: 15,
-    fontFamily: "sans-serif",
-    fontSize: 20,
-    backgroundColor: "#f2f2f2",
-    marginBottom: 30,
-    padding: 15,
-    textAlign: "center",
+  image: {
     width: "100%",
+    minHeight: 400,
+    flex: 1,
+    resizeMode: "cover",
+    justifyContent: "center"
   },
-
-  btn_default: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    textAlign: "center",
-
+  tituloGrande: {
+    fontSize: 60,
+    paddingLeft: -45,
+    lineHeight: 80,
+    fontWeight: "bold",
+  },
+  traco_decorado: {
     width: "100%",
-    height: 60,
-
+    position: "relative",
+    bottom: 23,
     backgroundColor: "#25d366",
-    borderRadius: 15,
+    maxWidth: "10%",
+    marginLeft: "-90%",
+    height: 5,
   },
-  text_btn_default: {
-    color: "white",
-    fontSize: 30,
-    fontFamily: "sans-serif",
-    fontWeight: "500",
+  traco_decorado_grande: {
+    width: "40%",
+    position: "relative",
+    right: 25,
+    top: 60,
+    backgroundColor: "#fff",
+    height: 7,
   },
 });
+
