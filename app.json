@@ -12,9 +12,9 @@
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "cover",
-      "backgroundColor": "#286C42"
+      "backgroundColor": "#000000"
     },
-    "primaryColor": "#286C42",
+    "primaryColor": "#000000",
     "updates": {
       "fallbackToCacheTimeout": 0
     },

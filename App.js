@@ -29,7 +29,7 @@ export default function App() {
 
   const [animeInput] = useState(new Animated.ValueXY({ x: 0, y: 100 }));
   const [opacity] = useState(new Animated.Value(1));
-  const [opacitySaudacao] = useState(new Animated.Value(1))
+  const [opacitySaudacao] = useState(new Animated.Value(.6))
 
   const image = { uri: "https://reactjs.org/logo-og.png" };
 
@@ -77,7 +77,7 @@ export default function App() {
           </Titulo>
           <View style={styles.traco_decorado}></View>
           <Titulo style={styles.tituloGrande}>
-            Zap
+            Zap!
            </Titulo>
           <View style={styles.traco_decorado_grande}></View>
         </Container>
@@ -95,21 +95,15 @@ export default function App() {
           {/* <Descricao ></Descricao> */}
 
           <Animated.Text style={{
-            fontSize: 18,
+            fontSize: 25,
             color: "#fff",
+            // backgroundColor: "green",
             fontFamily: "sans-serif",
             position: "relative",
-            bottom: 30,
+            fontWeight: "bold",
+            bottom: 25,
             width: "100%",
-            textAlign: "left",
-            paddingBottom: 5,
-            borderColor: "#fff",
-            borderStyle: "solid",
-            borderWidth: 1,
-            borderTopWidth: 0,
-            borderRightWidth: 0,
-            borderLeftWidth: 0,
-
+            textAlign: "center",
             opacity: opacitySaudacao,
 
           }}>Qual número deseja chamar?</Animated.Text>
