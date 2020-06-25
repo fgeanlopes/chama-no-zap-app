@@ -53,7 +53,7 @@ export const CampoEntrada = styled.TextInput`
     height: 50px;
    font-family: sans-serif;
     font-size: 22px;
-    margin: 10px 0 30px 0;
+    margin: 10px 0 60px 0;
     textAlign: center;
     width: 100%;
     color:#fff;
@@ -71,8 +71,11 @@ export const BtnEnviar = styled.TouchableOpacity`
     justify-content: center;
     text-align: center;
     width: 100%;
+    marginTop:-15px;
     height: 60px;
+    borderRadius:10px;
     border:2px solid #25d366;
+    background:#25d366;
 `;
 
 export const TituloBtn = styled.Text`

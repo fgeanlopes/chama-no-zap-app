@@ -29,9 +29,10 @@ export default function App() {
 
   const [animeInput] = useState(new Animated.ValueXY({ x: 0, y: 100 }));
   const [opacity] = useState(new Animated.Value(1));
-  const [opacitySaudacao] = useState(new Animated.Value(.6))
+  const [opacitySaudacao] = useState(new Animated.Value(.6));
+  const [opacity_input_number] = useState(new Animated.Value(1));
 
-  const image = { uri: "https://reactjs.org/logo-og.png" };
+  let imageFundo = "./assets/fundoApp.png";
 
   useEffect(() => {
     KeyboardDidShowListener = Keyboard.addListener("keyboardDidShow", KeyboardDidShowListener);
@@ -47,15 +48,24 @@ export default function App() {
       Animated.timing(opacity, {
         toValue: 1,
         duration: 500,
-      })
+      }),
     ]).start()
   }, [])
   function KeyboardDidShowListener() {
     Animated.parallel([
       Animated.timing(opacitySaudacao, {
-        toValue: 0,
+        toValue: 0.6,
         duration: 100,
-      })
+      }),
+      Animated.timing(opacity_input_number, {
+        toValue: 0,
+        duration: 50,
+      }),
+      Animated.spring(animeInput.y, {
+        toValue: -15,
+        speed: 1,
+        bounciness: 0,
+      }),
     ]).start()
   }
   function KeyboardDidHideListener() {
@@ -63,14 +73,28 @@ export default function App() {
       Animated.timing(opacitySaudacao, {
         toValue: 0.6,
         speed: 100,
-      })
+      }),
+      Animated.spring(opacitySaudacao, {
+        toValue: 100,
+        speed: 1,
+        bounciness: 0,
+      }),
+      Animated.timing(opacity_input_number, {
+        toValue: 1,
+        duration: 100,
+      }),
+      Animated.spring(animeInput.y, {
+        toValue: 0,
+        speed: 1,
+        bounciness: 0,
+      }),
     ]).start();
   }
 
   return (
 
     <Tela>
-      <ImageBackground style={styles.image} source={require("./assets/fundoApp.png")}>
+      <ImageBackground style={styles.image} source={require(imageFundo)}>
         <Container>
           <Titulo>
             Chama no
@@ -79,7 +103,15 @@ export default function App() {
           <Titulo style={styles.tituloGrande}>
             Zap!
            </Titulo>
-          <View style={styles.traco_decorado_grande}></View>
+          <Animated.View style={{
+            width: "40%",
+            opacity: 0,
+            position: "relative",
+            right: 25,
+            top: 50,
+            backgroundColor: "#fff",
+            height: 7,
+          }}></Animated.View>
         </Container>
         <Container>
           <Animated.View
@@ -97,7 +129,6 @@ export default function App() {
           <Animated.Text style={{
             fontSize: 25,
             color: "#fff",
-            // backgroundColor: "green",
             fontFamily: "sans-serif",
             position: "relative",
             fontWeight: "bold",
@@ -106,7 +137,7 @@ export default function App() {
             textAlign: "center",
             opacity: opacitySaudacao,
 
-          }}>Qual número deseja chamar?</Animated.Text>
+          }}>Informe DD + Número </Animated.Text>
 
           <Animated.View
             style={[
@@ -119,7 +150,7 @@ export default function App() {
           >
             <CampoEntrada
               onChangeText={whatsApp => setWhatsApp(whatsApp)}
-              placeholder={'DD + Número'}
+              placeholder={'Clique aqui para digitar'}
               keyboardType="numeric"
               placeholderTextColor="#fff"
               value={whatsApp}
